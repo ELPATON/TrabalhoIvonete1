@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="page-header">
+    <h1>Turmas</h1>
+</div>
+
+<div class="form-card">
+    <h2>Nova turma</h2>
+    <form action="/turmas/novo" method="POST">
+        <input type="text" name="nome" placeholder="Nome (ex: 3A)" required>
+        <input type="text" name="serie" placeholder="Série (ex: 3º ano)" required>
+        <select name="turno">
+            <option value="matutino">Matutino</option>
+            <option value="vespertino">Vespertino</option>
+            <option value="noturno">Noturno</option>
+        </select>
+        <button type="submit">Salvar</button>
+    </form>
+</div>
+
+<div class="table-card">
+    <h2>Lista de turmas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Série</th>
+                <th>Turno</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for turma in turmas %}
+            <tr>
+                <td>{{ turma.nome }}</td>
+                <td>{{ turma.serie }}</td>
+                <td>{{ turma.turno }}</td>
+                <td>
+                    <a href="/turmas/excluir/{{ turma.id }}"
+                       onclick="return confirm('Excluir esta turma?')">
+                       Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

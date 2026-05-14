@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="page-header">
+    <h1>Professores</h1>
+</div>
+
+<div class="form-card">
+    <h2>Novo professor</h2>
+    <form action="/professores/novo" method="POST">
+        <input type="text" name="nome" placeholder="Nome completo" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="disciplina" placeholder="Disciplina" required>
+        <button type="submit">Salvar</button>
+    </form>
+</div>
+
+<div class="table-card">
+    <h2>Lista de professores</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Disciplina</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for professor in professores %}
+            <tr>
+                <td>{{ professor.nome }}</td>
+                <td>{{ professor.email }}</td>
+                <td>{{ professor.disciplina }}</td>
+                <td>
+                    <a href="/professores/excluir/{{ professor.id }}"
+                       onclick="return confirm('Excluir este professor?')">
+                       Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

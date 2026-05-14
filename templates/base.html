@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFlow</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">EduFlow</div>
+        <div class="nav-links">
+            <a href="/alunos">Alunos</a>
+            <a href="/professores">Professores</a>
+            <a href="/turmas">Turmas</a>
+            <a href="/notas">Notas</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block conteudo %}{% endblock %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="page-header">
+    <h1>Alunos</h1>
+</div>
+
+<!-- Formulário para adicionar novo aluno -->
+<div class="form-card">
+    <h2>Novo aluno</h2>
+    <form action="/alunos/novo" method="POST">
+        <input type="text" name="nome" placeholder="Nome completo" required>
+        <input type="text" name="matricula" placeholder="Matrícula" required>
+        <input type="text" name="turma" placeholder="Turma (ex: 3A)" required>
+        <select name="status">
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+        </select>
+        <button type="submit">Salvar</button>
+    </form>
+</div>
+
+<!-- Tabela com os alunos cadastrados -->
+<div class="table-card">
+    <h2>Lista de alunos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Matrícula</th>
+                <th>Turma</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aluno in alunos %}
+            <tr>
+                <td>{{ aluno.nome }}</td>
+                <td>{{ aluno.matricula }}</td>
+                <td>{{ aluno.turma }}</td>
+                <td>{{ aluno.status }}</td>
+                <td>
+                    <a href="/alunos/excluir/{{ aluno.id }}" 
+                       onclick="return confirm('Excluir este aluno?')">
+                       Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
