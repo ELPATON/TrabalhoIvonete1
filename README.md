@@ -37,7 +37,7 @@ pip install flask python-dotenv requests
 ### 3. Configure as variáveis de ambiente
 Crie um arquivo `.env` na raiz do projeto:
 SUPABASE_URL=https://dfeputmnswipzmgzqlrx.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmZXB1dG1uc3dpcHptZ3pxbHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MTU1NzgsImV4cCI6MjA5NDI5MTU3OH0.C8z3wHgTgWEk1ye_U2gAi1OSqXW3PiKddVYHi0oz8Fs
+SUPABASE_KEY=
 ### 4. Configure o banco de dados
 No Supabase, crie as seguintes tabelas:
 
