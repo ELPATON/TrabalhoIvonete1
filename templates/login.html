@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div style="max-width: 400px; margin: 3rem auto;">
+    <div class="form-card">
+        <h2>Entrar no EduFlow</h2>
+
+        {% if erro %}
+        <p style="color: red; margin-bottom: 1rem;">{{ erro }}</p>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            Não tem conta? <a href="/cadastro" style="color: #185FA5;">Cadastre-se</a>
+        </p>
+    </div>
+</div>
+
+{% endblock %}
