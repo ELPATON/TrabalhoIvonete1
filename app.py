@@ -40,8 +40,6 @@ def login_requerido(f):
         return f(*args, **kwargs)
     return decorated
 
-# ========== AUTH ==========
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     erro = None
@@ -54,6 +52,7 @@ def login():
             headers={'apikey': KEY, 'Content-Type': 'application/json'}
         )
         dados = r.json()
+        print('RESPOSTA LOGIN:', dados)
         if 'access_token' in dados:
             session['usuario'] = email
             session['token'] = dados['access_token']
@@ -75,6 +74,7 @@ def cadastro():
             headers={'apikey': KEY, 'Content-Type': 'application/json'}
         )
         dados = r.json()
+        print('RESPOSTA CADASTRO:', dados)
         if 'id' in dados:
             sucesso = 'Cadastro realizado! Faça login.'
         else:
@@ -85,8 +85,6 @@ def cadastro():
 def logout():
     session.clear()
     return redirect('/login')
-
-# ========== ALUNOS ==========
 
 @app.route('/')
 def index():
@@ -126,8 +124,6 @@ def excluir_aluno(id):
     db_delete('alunos', id)
     return redirect('/alunos')
 
-# ========== PROFESSORES ==========
-
 @app.route('/professores')
 @login_requerido
 def professores():
@@ -150,8 +146,6 @@ def excluir_professor(id):
     db_delete('professores', id)
     return redirect('/professores')
 
-# ========== TURMAS ==========
-
 @app.route('/turmas')
 @login_requerido
 def turmas():
@@ -173,8 +167,6 @@ def nova_turma():
 def excluir_turma(id):
     db_delete('turmas', id)
     return redirect('/turmas')
-
-# ========== NOTAS ==========
 
 @app.route('/notas')
 @login_requerido
@@ -202,7 +194,3 @@ def excluir_nota(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-   dados = r.json()
-print('RESPOSTA CADASTRO:', dados)  # adiciona essa linha
-if 'id' in dados:
