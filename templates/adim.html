@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="page-header">
+    <h1>Painel do Administrador</h1>
+</div>
+
+<div class="table-card">
+    <h2>Gerenciar usuários</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Perfil atual</th>
+                <th>Alterar perfil</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.perfil }}</td>
+                <td>
+                    <form action="/admin/perfil/{{ usuario.id }}" method="POST" style="display:flex; gap: 8px;">
+                        <select name="perfil">
+                            <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>Admin</option>
+                            <option value="professor" {% if usuario.perfil == 'professor' %}selected{% endif %}>Professor</option>
+                            <option value="aluno" {% if usuario.perfil == 'aluno' %}selected{% endif %}>Aluno</option>
+                        </select>
+                        <button type="submit" class="btn-salvar">Salvar</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="/admin/excluir/{{ usuario.id }}"
+                       onclick="return confirm('Excluir este usuário?')">
+                       Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
