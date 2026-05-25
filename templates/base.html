@@ -11,12 +11,24 @@
     <nav>
         <div class="nav-logo">EduFlow</div>
         <div class="nav-links">
+<<<<<<< Updated upstream
     <a href="/alunos">Alunos</a>
     <a href="/professores">Professores</a>
     <a href="/turmas">Turmas</a>
     <a href="/notas">Notas</a>
     <a href="/logout">Sair</a>
        </div>
+=======
+            <a href="/alunos">Alunos</a>
+            <a href="/professores">Professores</a>
+            <a href="/turmas">Turmas</a>
+            <a href="/notas">Notas</a>
+            {% if session.get('perfil') == 'admin' %}
+            <a href="/admin">Admin</a>
+            {% endif %}
+            <a href="/logout">Sair</a>
+        </div>
+>>>>>>> Stashed changes
     </nav>
 
     <div class="container">

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from flask import Flask, render_template, request, redirect, session
 from functools import wraps
 from dotenv import load_dotenv
@@ -85,6 +86,26 @@ def cadastro():
 def logout():
     session.clear()
     return redirect('/login')
+=======
+from flask import Flask, redirect
+from rota.auth import auth_bp
+from rota.adim import admin_bp
+from rota.aluno import alunos_bp
+from rota.professor import professores_bp
+from rota.turmas import turmas_bp
+from rota.notas import notas_bp
+
+app = Flask(__name__)
+app.static_folder = 'static'
+app.secret_key = 'eduflow2026'
+
+app.register_blueprint(auth_bp)
+app.register_blueprint(admin_bp)
+app.register_blueprint(alunos_bp)
+app.register_blueprint(professores_bp)
+app.register_blueprint(turmas_bp)
+app.register_blueprint(notas_bp)
+>>>>>>> Stashed changes
 
 @app.route('/')
 def index():
