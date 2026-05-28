@@ -7,33 +7,33 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
 </head>
 <body>
-
     <nav>
         <div class="nav-logo">EduFlow</div>
         <div class="nav-links">
-<<<<<<< Updated upstream
-    <a href="/alunos">Alunos</a>
-    <a href="/professores">Professores</a>
-    <a href="/turmas">Turmas</a>
-    <a href="/notas">Notas</a>
-    <a href="/logout">Sair</a>
-       </div>
-=======
-            <a href="/alunos">Alunos</a>
-            <a href="/professores">Professores</a>
-            <a href="/turmas">Turmas</a>
-            <a href="/notas">Notas</a>
+
             {% if session.get('perfil') == 'admin' %}
-            <a href="/admin">Admin</a>
+                <a href="/alunos">Alunos</a>
+                <a href="/professores">Professores</a>
+                <a href="/turmas">Turmas</a>
+                <a href="/notas">Notas</a>
+                <a href="/admin">Admin</a>
+
+            {% elif session.get('perfil') == 'professor' %}
+                <a href="/alunos">Alunos</a>
+                <a href="/turmas">Turmas</a>
+                <a href="/notas">Notas</a>
+
+            {% elif session.get('perfil') == 'aluno' %}
+                <a href="/turmas">Minhas Turmas</a>
+                <a href="/notas">Minhas Notas</a>
+
             {% endif %}
+
             <a href="/logout">Sair</a>
         </div>
->>>>>>> Stashed changes
     </nav>
-
     <div class="container">
         {% block conteudo %}{% endblock %}
     </div>
-
 </body>
 </html>

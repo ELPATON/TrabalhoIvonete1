@@ -1,33 +1,34 @@
-{% extends 'base.html' %}
-
-{% block conteudo %}
-
-<div style="max-width: 400px; margin: 3rem auto;">
-    <div class="form-card">
-        <h2>Entrar no EduFlow</h2>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFlow - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+    <div class="login-box">
+        <h1>Portal EduFlow</h1>
 
         {% if erro %}
-        <p style="color: red; margin-bottom: 1rem;">{{ erro }}</p>
+        <p style="color: #faa635; margin-bottom: 1rem; font-size: 0.9rem;">{{ erro }}</p>
         {% endif %}
 
         <form action="/login" method="POST">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
+            <div class="form__field">
+                <label for="email">@</label>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form__field">
+                <label for="senha">??</label>
+                <input type="password" id="senha" name="senha" placeholder="Senha" required>
+            </div>
+            <input type="submit" value="ACESSAR">
         </form>
 
-        <p style="margin-top: 1rem; font-size: 0.9rem;">
-<<<<<<< Updated upstream
-            Não tem conta? <a href="/cadastro" style="color: #185FA5;">Cadastre-se</a>
-=======
-            Nao tem conta? <a href="/cadastro" style="color: #185FA5;">Cadastre-se</a>
->>>>>>> Stashed changes
+        <p class="small">
+            Nao tem conta? <a href="/cadastro">Cadastre-se</a>
         </p>
     </div>
-</div>
-
-<<<<<<< Updated upstream
-{% endblock %}
-=======
-{% endblock %}
->>>>>>> Stashed changes
+</body>
+</html>

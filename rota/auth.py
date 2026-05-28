@@ -27,13 +27,10 @@ def login():
             session['token'] = dados['access_token']
             auth_id = dados['user']['id']
             usuarios = db_get_filtrado('usuarios', 'auth_id', auth_id)
-            print('USUARIOS ENCONTRADOS:', usuarios)
             if usuarios:
                 session['perfil'] = usuarios[0]['perfil']
-                print('PERFIL SALVO:', session['perfil'])
             else:
                 session['perfil'] = 'aluno'
-                print('PERFIL PADRAO: aluno')
             return redirect('/alunos')
         else:
             erro = 'Email ou senha incorretos!'
@@ -54,13 +51,14 @@ def cadastro():
         )
         dados = r.json()
         print('RESPOSTA CADASTRO:', dados)
-        if 'id' in dados:
+        auth_id = dados.get('id') or (dados.get('user') or {}).get('id')
+        if auth_id:
             db_insert('usuarios', {
                 'email': email,
                 'perfil': perfil,
-                'auth_id': dados['id']
+                'auth_id': auth_id
             })
-            sucesso = 'Cadastro realizado! Faça login.'
+            sucesso = 'Cadastro realizado! Faca login.'
         else:
             erro = 'Erro ao cadastrar. Tente outro email.'
     return render_template('cadastro.html', erro=erro, sucesso=sucesso)
