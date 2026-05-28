@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="page-header">
+    <h1>Painel do Administrador</h1>
+</div>
+
+<div class="form-card">
+    <h2>Criar novo usuario</h2>
+    <form action="/admin/criar" method="POST">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="senha" placeholder="Senha (minimo 6 caracteres)" required>
+        <select name="perfil" id="perfil-select" onchange="mostrarAluno(this.value)">
+            <option value="aluno">Aluno</option>
+            <option value="professor">Professor</option>
+            <option value="admin">Admin</option>
+        </select>
+        <div id="campo-aluno">
+            <select name="aluno_id">
+                <option value="">Selecione o aluno para vincular</option>
+                {% for aluno in alunos %}
+                <option value="{{ aluno.id }}">{{ aluno.nome }} - {{ aluno.matricula }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Criar usuario</button>
+    </form>
+</div>
+
+<div class="table-card">
+    <h2>Usuarios cadastrados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Perfil atual</th>
+                <th>Alterar perfil</th>
+                <th>Acoes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.perfil }}</td>
+                <td>
+                    <form action="/admin/perfil/{{ usuario.id }}" method="POST" style="display:flex; gap: 8px;">
+                        <select name="perfil">
+                            <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>Admin</option>
+                            <option value="professor" {% if usuario.perfil == 'professor' %}selected{% endif %}>Professor</option>
+                            <option value="aluno" {% if usuario.perfil == 'aluno' %}selected{% endif %}>Aluno</option>
+                        </select>
+                        <button type="submit">Salvar</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="/admin/excluir/{{ usuario.id }}"
+                       onclick="return confirm('Excluir este usuario?')">
+                       Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function mostrarAluno(perfil) {
+    const campo = document.getElementById('campo-aluno');
+    campo.style.display = perfil === 'aluno' ? 'block' : 'none';
+}
+mostrarAluno('aluno');
+</script>
+
+{% endblock %}
