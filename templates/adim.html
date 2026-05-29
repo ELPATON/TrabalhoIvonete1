@@ -4,37 +4,32 @@
 
 <div class="page-header">
     <h1>Painel do Administrador</h1>
+    <p class="subtitle">Gerencie usuários e permissões do sistema</p>
 </div>
 
 <div class="form-card">
     <h2>Criar novo usuario</h2>
     <form action="/admin/criar" method="POST">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="senha" placeholder="Senha (minimo 6 caracteres)" required>
-        <select name="perfil" id="perfil-select" onchange="mostrarAluno(this.value)">
-            <option value="aluno">Aluno</option>
-            <option value="professor">Professor</option>
-            <option value="admin">Admin</option>
-        </select>
-        <div id="campo-aluno">
-            <select name="aluno_id">
-                <option value="">Selecione o aluno para vincular</option>
-                {% for aluno in alunos %}
-                <option value="{{ aluno.id }}">{{ aluno.nome }} - {{ aluno.matricula }}</option>
-                {% endfor %}
+        <div class="form-row">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha (minimo 6 caracteres)" required>
+            <select name="perfil">
+                <option value="professor">Professor</option>
+                <option value="admin">Admin</option>
             </select>
+            <button type="submit">Criar</button>
         </div>
-        <button type="submit">Criar usuario</button>
     </form>
 </div>
 
 <div class="table-card">
     <h2>Usuarios cadastrados</h2>
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
                 <th>Email</th>
-                <th>Perfil atual</th>
+                <th>Perfil</th>
                 <th>Alterar perfil</th>
                 <th>Acoes</th>
             </tr>
@@ -42,10 +37,10 @@
         <tbody>
             {% for usuario in usuarios %}
             <tr>
-                <td>{{ usuario.email }}</td>
+                <td><strong>{{ usuario.email }}</strong></td>
                 <td>{{ usuario.perfil }}</td>
                 <td>
-                    <form action="/admin/perfil/{{ usuario.id }}" method="POST" style="display:flex; gap: 8px;">
+                    <form action="/admin/perfil/{{ usuario.id }}" method="POST" style="display:flex; gap: 6px;">
                         <select name="perfil">
                             <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>Admin</option>
                             <option value="professor" {% if usuario.perfil == 'professor' %}selected{% endif %}>Professor</option>
@@ -54,8 +49,9 @@
                         <button type="submit">Salvar</button>
                     </form>
                 </td>
-                <td>
+                <td class="table-actions">
                     <a href="/admin/excluir/{{ usuario.id }}"
+                       class="btn-delete"
                        onclick="return confirm('Excluir este usuario?')">
                        Excluir
                     </a>
@@ -64,14 +60,6 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
-
-<script>
-function mostrarAluno(perfil) {
-    const campo = document.getElementById('campo-aluno');
-    campo.style.display = perfil === 'aluno' ? 'block' : 'none';
-}
-mostrarAluno('aluno');
-</script>
-
 {% endblock %}

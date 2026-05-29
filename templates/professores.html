@@ -4,45 +4,68 @@
 
 <div class="page-header">
     <h1>Professores</h1>
+    <p class="subtitle">Gerencie os professores cadastrados no sistema</p>
 </div>
 
+{% if erro %}
+<div class="msg-erro">{{ erro }}</div>
+{% endif %}
+
+{% if session.get('perfil') == 'admin' %}
 <div class="form-card">
     <h2>Novo professor</h2>
     <form action="/professores/novo" method="POST">
-        <input type="text" name="nome" placeholder="Nome completo" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="disciplina" placeholder="Disciplina" required>
-        <button type="submit">Salvar</button>
+        <div class="form-row">
+            <input type="text" name="nome" placeholder="Nome completo" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha (min 6 caracteres)" required minlength="6">
+        </div>
+        <div class="form-row">
+            <input type="text" name="disciplina" placeholder="Disciplina" required>
+            <button type="submit">Salvar</button>
+        </div>
     </form>
 </div>
+{% endif %}
 
 <div class="table-card">
     <h2>Lista de professores</h2>
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Disciplina</th>
+                {% if session.get('perfil') == 'admin' %}
                 <th>Ações</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for professor in professores %}
             <tr>
-                <td>{{ professor.nome }}</td>
+                <td><strong>{{ professor.nome }}</strong></td>
                 <td>{{ professor.email }}</td>
                 <td>{{ professor.disciplina }}</td>
-                <td>
+                {% if session.get('perfil') == 'admin' %}
+                <td class="table-actions">
                     <a href="/professores/excluir/{{ professor.id }}"
+                       class="btn-delete"
                        onclick="return confirm('Excluir este professor?')">
                        Excluir
                     </a>
                 </td>
+                {% endif %}
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4"><div class="empty-state"><p>Nenhum professor cadastrado.</p></div></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 
 {% endblock %}

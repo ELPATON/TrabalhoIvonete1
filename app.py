@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect
+from flask import Flask, redirect, session
 
 template_dir = os.path.abspath('templates')
 static_dir = os.path.abspath('static')
@@ -23,7 +23,15 @@ app.register_blueprint(notas_bp)
 
 @app.route('/')
 def index():
-    return redirect('/alunos')
+    if 'usuario' not in session:
+        return redirect('/login')
+    perfil = session.get('perfil', 'aluno')
+    if perfil == 'admin':
+        return redirect('/admin')
+    elif perfil == 'professor':
+        return redirect('/alunos')
+    else:
+        return redirect('/turmas')
 
 if __name__ == '__main__':
     app.run(debug=True)

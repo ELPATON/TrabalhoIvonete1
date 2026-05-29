@@ -4,53 +4,77 @@
 
 <div class="page-header">
     <h1>Alunos</h1>
+    <p class="subtitle">Gerencie os alunos cadastrados no sistema</p>
 </div>
 
-<!-- Formulário para adicionar novo aluno -->
+{% if erro %}
+<div class="msg-erro">{{ erro }}</div>
+{% endif %}
+
+{% if session.get('perfil') == 'admin' %}
 <div class="form-card">
     <h2>Novo aluno</h2>
     <form action="/alunos/novo" method="POST">
-        <input type="text" name="nome" placeholder="Nome completo" required>
-        <input type="text" name="matricula" placeholder="Matrícula" required>
-        <input type="text" name="turma" placeholder="Turma (ex: 3A)" required>
-        <select name="status">
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
-        </select>
-        <button type="submit">Salvar</button>
+        <div class="form-row">
+            <input type="text" name="nome" placeholder="Nome completo" required>
+            <input type="email" name="email" placeholder="Email do aluno" required>
+            <input type="password" name="senha" placeholder="Senha (min 6 caracteres)" required minlength="6">
+        </div>
+        <div class="form-row">
+            <input type="text" name="matricula" placeholder="Matrícula" required>
+            <input type="text" name="turma" placeholder="Turma (ex: 3A)" required>
+            <select name="status">
+                <option value="ativo">Ativo</option>
+                <option value="inativo">Inativo</option>
+            </select>
+            <button type="submit">Salvar</button>
+        </div>
     </form>
 </div>
+{% endif %}
 
-<!-- Tabela com os alunos cadastrados -->
 <div class="table-card">
     <h2>Lista de alunos</h2>
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
                 <th>Nome</th>
+                <th>Email</th>
                 <th>Matrícula</th>
                 <th>Turma</th>
                 <th>Status</th>
+                {% if session.get('perfil') == 'admin' %}
                 <th>Ações</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for aluno in alunos %}
             <tr>
-                <td>{{ aluno.nome }}</td>
+                <td><strong>{{ aluno.nome }}</strong></td>
+                <td>{{ aluno.email }}</td>
                 <td>{{ aluno.matricula }}</td>
                 <td>{{ aluno.turma }}</td>
-                <td>{{ aluno.status }}</td>
-                <td>
-                    <a href="/alunos/excluir/{{ aluno.id }}" 
+                <td><span class="status-{{ aluno.status }}">{{ aluno.status }}</span></td>
+                {% if session.get('perfil') == 'admin' %}
+                <td class="table-actions">
+                    <a href="/alunos/excluir/{{ aluno.id }}"
+                       class="btn-delete"
                        onclick="return confirm('Excluir este aluno?')">
                        Excluir
                     </a>
                 </td>
+                {% endif %}
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6"><div class="empty-state"><p>Nenhum aluno cadastrado.</p></div></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 
 {% endblock %}

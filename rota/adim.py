@@ -14,8 +14,7 @@ def admin():
     if session.get('perfil') != 'admin':
         return redirect('/acesso_negado')
     usuarios = db_get('usuarios')
-    alunos = db_get('alunos')
-    return render_template('adim.html', usuarios=usuarios, alunos=alunos)
+    return render_template('adim.html', usuarios=usuarios)
 
 @admin_bp.route('/admin/criar', methods=['POST'])
 def criar_usuario():
@@ -24,7 +23,6 @@ def criar_usuario():
     email = request.form['email']
     senha = request.form['senha']
     perfil = request.form['perfil']
-    aluno_id = request.form.get('aluno_id')
 
     r = requests.post(
         f'{URL}/auth/v1/signup',
@@ -41,8 +39,6 @@ def criar_usuario():
             'perfil': perfil,
             'auth_id': auth_id
         })
-        if perfil == 'aluno' and aluno_id:
-            db_update('alunos', int(aluno_id), {'auth_id': auth_id})
 
     return redirect('/admin')
 
