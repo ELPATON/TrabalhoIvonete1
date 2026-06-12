@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduFlow - Cadastro</title>
+    <title>EduFlow - Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
 </head>
 <body class="login-page">
@@ -14,27 +14,24 @@
                     <div class="badge-icon">EF</div>
                     <span>EduFlow</span>
                 </div>
-                <h2>Crie sua<br>conta agora</h2>
-                <p>Escolha seu perfil e comece a usar a plataforma.</p>
+                <h2>Plataforma<br>de Gestão Escolar</h2>
+                <p>Gerencie alunos, professores, turmas e notas em um só lugar.</p>
                 <div class="brand-features">
-                    <div class="feature"><span class="check">✓</span> Acesso rápido e seguro</div>
-                    <div class="feature"><span class="check">✓</span> Perfis personalizados</div>
+                    <div class="feature"><span class="check">✓</span> Controle acadêmico completo</div>
+                    <div class="feature"><span class="check">✓</span> Acompanhamento de notas</div>
+                    <div class="feature"><span class="check">✓</span> Gestão de turmas</div>
                 </div>
             </div>
         </div>
         <div class="login-form-area">
-            <h3>Criar conta</h3>
-            <p class="login-sub">Preencha os dados abaixo</p>
+            <h3>Bem-vindo</h3>
+            <p class="login-sub">Faça login para continuar</p>
 
             {% if erro %}
             <div class="msg-erro">{{ erro }}</div>
             {% endif %}
 
-            {% if sucesso %}
-            <div class="msg-sucesso">{{ sucesso }}</div>
-            {% endif %}
-
-            <form action="/cadastro" method="POST">
+            <form action="/login" method="POST">
                 <div class="form__field">
                     <label>@</label>
                     <input type="email" name="email" placeholder="Seu email" required>
@@ -43,19 +40,11 @@
                     <label>#</label>
                     <input type="password" name="senha" placeholder="Sua senha" required>
                 </div>
-                <div class="form__field">
-                    <label>^^</label>
-                    <select name="perfil">
-                        <option value="aluno">Aluno</option>
-                        <option value="professor">Professor</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <input type="submit" value="CADASTRAR">
+                <input type="submit" value="ENTRAR">
             </form>
 
             <p class="small">
-                Ja tem conta? <a href="/login">Faca login</a>
+                Acesso restrito ao administrador
             </p>
         </div>
     </div>

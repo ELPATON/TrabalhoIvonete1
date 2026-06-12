@@ -1,14 +1,13 @@
 import sys
 import os
 import requests
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Blueprint, render_template, request, redirect, session
 from config import URL, KEY, HEADERS
 from db import db_insert, db_get_filtrado
 
-auth_bp = Blueprint('auth', __name__, template_folder=os.path.join(ROOT, 'templates'))
+auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -22,20 +21,23 @@ def login():
             headers={'apikey': KEY, 'Content-Type': 'application/json'}
         )
         dados = r.json()
-        print('RESPOSTA LOGIN:', dados)
         if 'access_token' in dados:
             session['usuario'] = email
             session['token'] = dados['access_token']
             auth_id = dados['user']['id']
+            session['auth_id'] = auth_id
             usuarios = db_get_filtrado('usuarios', 'auth_id', auth_id)
-            print('USUARIOS ENCONTRADOS:', usuarios)
             if usuarios:
                 session['perfil'] = usuarios[0]['perfil']
-                print('PERFIL SALVO:', session['perfil'])
             else:
                 session['perfil'] = 'aluno'
-                print('PERFIL PADRAO: aluno')
-            return redirect('/alunos')
+            perfil = session.get('perfil', 'aluno')
+            if perfil == 'admin':
+                return redirect('/admin')
+            elif perfil == 'professor':
+                return redirect('/alunos')
+            else:
+                return redirect('/turmas')
         else:
             erro = 'Email ou senha incorretos!'
     return render_template('login.html', erro=erro)
@@ -54,16 +56,16 @@ def cadastro():
             headers={'apikey': KEY, 'Content-Type': 'application/json'}
         )
         dados = r.json()
-        print('RESPOSTA CADASTRO:', dados)
-        if 'id' in dados:
+        auth_id = dados.get('id') or (dados.get('user') or {}).get('id')
+        if auth_id:
             db_insert('usuarios', {
                 'email': email,
                 'perfil': perfil,
-                'auth_id': dados['id']
+                'auth_id': auth_id
             })
-            sucesso = 'Cadastro realizado! Faca login.'
+            sucesso = 'Conta criada com sucesso!'
         else:
-            erro = 'Erro ao cadastrar. Tente outro email.'
+            erro = 'Erro ao criar conta. Verifique os dados e tente novamente.'
     return render_template('cadastro.html', erro=erro, sucesso=sucesso)
 
 @auth_bp.route('/logout')

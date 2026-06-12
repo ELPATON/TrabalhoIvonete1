@@ -1,105 +1,149 @@
-# EduFlow — Sistema de Gestão Escolar
+# EduFlow — Documentação Técnica
 
-Projeto Integrador — Linguagem de Programação
-
-## Descrição
-Sistema web de gerenciamento escolar com cadastro completo de alunos, professores, turmas e notas. Desenvolvido com Python + Flask no backend e Supabase como banco de dados em nuvem.
-
-## Tecnologias utilizadas
-- Python 3.14
-- Flask 3.1
-- Supabase (PostgreSQL)
-- HTML + CSS
-- Jinja2 (templates)
-- Requests (chamadas HTTP para a API do Supabase)
-
-## Funcionalidades
-- Cadastro, listagem e exclusão de alunos
-- Cadastro, listagem e exclusão de professores
-- Cadastro, listagem e exclusão de turmas
-- Cadastro, listagem e exclusão de notas por bimestre
-
-## Estrutura do projeto
+## Estrutura do Projeto
 TrabalhoIvonete1/
 ├── app.py
+├── config.py
+├── db.py
+├── decorators.py
 ├── .env
 ├── .gitignore
+├── rota/
+│   ├── init.py
+│   ├── auth.py
+│   ├── adim.py
+│   ├── aluno.py
+│   ├── professor.py
+│   ├── turmas.py
+│   └── notas.py
 ├── static/
 │   └── estilo.css
 └── templates/
 ├── base.html
 ├── login.html
 ├── cadastro.html
+├── acesso_negado.html
+├── adim.html
 ├── alunos.html
 ├── professores.html
 ├── turmas.html
 └── notas.html
 
-## Como rodar o projeto
+---
 
-### 1. Clone o repositório
-```bash
-git clone https://github.com/seu-usuario/TrabalhoIvonete1.git
-cd TrabalhoIvonete1
-```
-### 2. Instale as dependências
-```bash
-pip install flask python-dotenv requests
-```
+## Arquivos Python
 
-### 3. Configure as variáveis de ambiente
-Crie um arquivo `.env` na raiz do projeto:
-SUPABASE_URL=https://dfeputmnswipzmgzqlrx.supabase.co
-SUPABASE_KEY=
-### 4. Configure o banco de dados
-No Supabase, crie as seguintes tabelas:
+### `app.py`
+É o ponto de entrada do sistema. Inicializa o Flask, define a chave secreta da sessão e registra todos os Blueprints (módulos de rotas). É o primeiro arquivo que o Python executa quando você roda `python app.py`.
 
-**alunos:** id, nome, matricula, turma, status
+### `config.py`
+Responsável pelas configurações globais do sistema. Lê as variáveis do arquivo `.env` (URL e chave do Supabase) e monta o cabeçalho HTTP usado em todas as requisições à API do Supabase.
 
-**professores:** id, nome, email, disciplina
+### `db.py`
+Contém todas as funções de comunicação com o banco de dados Supabase via API REST. É a camada de acesso a dados do sistema. Funções disponíveis:
+- `db_get(tabela)` → busca todos os registros
+- `db_insert(tabela, dados)` → insere um novo registro
+- `db_update(tabela, id, dados)` → atualiza um registro
+- `db_delete(tabela, id)` → remove um registro
+- `db_get_filtrado(tabela, campo, valor)` → busca com filtro
 
-**turmas:** id, nome, serie, turno
+### `decorators.py`
+Contém os decorators de proteção de rotas. Decorators são funções que "envolvem" outras funções adicionando comportamento extra. Dois decorators disponíveis:
+- `@login_requerido` → bloqueia acesso de usuários não logados
+- `@perfil_requerido('admin', 'professor')` → bloqueia acesso por perfil
 
-**notas:** id, aluno_id, disciplina, bimestre, valor
+---
 
-Desative o RLS executando no SQL Editor do Supabase:
-```sql
-ALTER TABLE alunos DISABLE ROW LEVEL SECURITY;
-ALTER TABLE professores DISABLE ROW LEVEL SECURITY;
-ALTER TABLE turmas DISABLE ROW LEVEL SECURITY;
-ALTER TABLE notas DISABLE ROW LEVEL SECURITY;
-```
+## Pasta `rota/`
 
-Desative a confirmação de email em:
-**Authentication → Providers → Email → desmarque "Confirm email"**
+### `rota/__init__.py`
+Arquivo vazio obrigatório. Indica ao Python que a pasta `rota` é um módulo e pode ser importada.
 
-### 5. Rode o projeto
-```bash
-python app.py
-```
+### `rota/auth.py`
+Gerencia toda a autenticação do sistema. Contém as rotas:
+- `GET/POST /login` → tela e lógica de login
+- `GET/POST /cadastro` → tela e lógica de cadastro
+- `GET /logout` → encerra a sessão
+- `GET /acesso_negado` → tela de acesso negado
 
-Acesse no navegador: **http://127.0.0.1:5000**
+### `rota/adim.py`
+Painel exclusivo do administrador. Contém as rotas:
+- `GET /admin` → lista todos os usuários
+- `GET /admin/excluir/<id>` → exclui um usuário
+- `POST /admin/perfil/<id>` → altera o perfil de um usuário
 
-## Como funciona
-O sistema usa a arquitetura **MVC simplificada**:
-- `app.py` contém todas as rotas, lógica de autenticação e comunicação com o banco
-- A autenticação é feita via **Supabase Auth** usando a API REST
-- A comunicação com o banco é feita via **API REST** usando a biblioteca `requests`
-- As sessões de usuário são gerenciadas pelo Flask com `secret_key`
-- Os templates HTML usam **Jinja2** para renderizar os dados dinamicamente
+### `rota/aluno.py`
+CRUD completo de alunos. Contém as rotas:
+- `GET /alunos` → lista todos os alunos (todos os perfis)
+- `POST /alunos/novo` → cadastra aluno (só admin)
+- `POST /alunos/editar/<id>` → edita aluno (só admin)
+- `GET /alunos/excluir/<id>` → exclui aluno (só admin)
 
-  ## Fluxo de autenticação
-1. Usuário acessa o sistema e é redirecionado para `/login`
-2. Faz cadastro em `/cadastro` com email e senha
-3. Supabase valida e retorna um token de acesso
-4. Flask salva o token na sessão do navegador
-5. Usuário é redirecionado para o sistema
-6. Ao sair, a sessão é encerrada via `/logout`
+### `rota/professor.py`
+CRUD de professores. Contém as rotas:
+- `GET /professores` → lista todos os professores (todos os perfis)
+- `POST /professores/novo` → cadastra professor (só admin)
+- `GET /professores/excluir/<id>` → exclui professor (só admin)
 
-## Integrantes do grupo
-- Matheus Alcantara Silva 
-- Guilherme Souza da Silva Fernandes dos Santos
-- Daniel Cerqueira Nonato
-- Vinicius Almeida Santos Ferreira
-- Cassio Gabriel da Silva Oliveira
-  
+### `rota/turmas.py`
+CRUD de turmas. Contém as rotas:
+- `GET /turmas` → lista todas as turmas (todos os perfis)
+- `POST /turmas/novo` → cadastra turma (só admin)
+- `GET /turmas/excluir/<id>` → exclui turma (só admin)
+
+### `rota/notas.py`
+CRUD de notas. Contém as rotas:
+- `GET /notas` → lista todas as notas (todos os perfis)
+- `POST /notas/novo` → lança nota (admin e professor)
+- `GET /notas/excluir/<id>` → exclui nota (admin e professor)
+
+---
+
+## Arquivos de Configuração
+
+### `.env`
+Armazena as credenciais sensíveis do projeto. **Nunca sobe para o GitHub.** Contém:
+- `SUPABASE_URL` → endereço do banco de dados
+- `SUPABASE_KEY` → chave de acesso à API
+
+### `.gitignore`
+Lista de arquivos que o Git ignora e não envia ao GitHub. Inclui o `.env`, arquivos de cache do Python (`__pycache__`) e arquivos compilados (`.pyc`).
+
+---
+
+## Pasta `templates/`
+
+Arquivos HTML renderizados pelo Flask usando o motor de templates **Jinja2**.
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `base.html` | Layout base com menu de navegação. Todos os outros herdam dele via `{% extends %}` |
+| `login.html` | Tela de login |
+| `cadastro.html` | Tela de cadastro com seleção de perfil |
+| `acesso_negado.html` | Tela exibida quando o perfil não tem permissão |
+| `adim.html` | Painel admin com lista de usuários e controle de perfis |
+| `alunos.html` | Listagem e formulário de alunos |
+| `professores.html` | Listagem e formulário de professores |
+| `turmas.html` | Listagem e formulário de turmas |
+| `notas.html` | Listagem e formulário de notas |
+
+---
+
+## Pasta `static/`
+
+### `estilo.css`
+Arquivo de estilos CSS responsável pelo visual do sistema. Define cores, fontes, layout do menu, tabelas e formulários.
+
+---
+
+## Tecnologias Utilizadas
+
+| Tecnologia | Função |
+|-----------|--------|
+| Python 3.14 | Linguagem principal |
+| Flask | Framework web |
+| Supabase | Banco de dados (PostgreSQL) + Autenticação |
+| Jinja2 | Motor de templates HTML |
+| Requests | Chamadas HTTP para API REST |
+| python-dotenv | Leitura do arquivo `.env` |
+| HTML + CSS | Interface do usuário |

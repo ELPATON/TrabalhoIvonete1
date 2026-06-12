@@ -1,3 +1,4 @@
+#proteção de rotas
 from functools import wraps
 from flask import session, redirect
 

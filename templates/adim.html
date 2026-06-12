@@ -4,37 +4,55 @@
 
 <div class="page-header">
     <h1>Painel do Administrador</h1>
+    <p class="subtitle">Gerencie usuários e permissões do sistema</p>
+</div>
+
+<div class="form-card">
+    <h2>Criar novo usuario</h2>
+    <form action="/admin/criar" method="POST">
+        <div class="form-row">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha (minimo 6 caracteres)" required>
+            <select name="perfil">
+                <option value="professor">Professor</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Criar</button>
+        </div>
+    </form>
 </div>
 
 <div class="table-card">
-    <h2>Gerenciar usuários</h2>
+    <h2>Usuarios cadastrados</h2>
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
                 <th>Email</th>
-                <th>Perfil atual</th>
+                <th>Perfil</th>
                 <th>Alterar perfil</th>
-                <th>Ações</th>
+                <th>Acoes</th>
             </tr>
         </thead>
         <tbody>
             {% for usuario in usuarios %}
             <tr>
-                <td>{{ usuario.email }}</td>
+                <td><strong>{{ usuario.email }}</strong></td>
                 <td>{{ usuario.perfil }}</td>
                 <td>
-                    <form action="/admin/perfil/{{ usuario.id }}" method="POST" style="display:flex; gap: 8px;">
+                    <form action="/admin/perfil/{{ usuario.id }}" method="POST" style="display:flex; gap: 6px;">
                         <select name="perfil">
                             <option value="admin" {% if usuario.perfil == 'admin' %}selected{% endif %}>Admin</option>
                             <option value="professor" {% if usuario.perfil == 'professor' %}selected{% endif %}>Professor</option>
                             <option value="aluno" {% if usuario.perfil == 'aluno' %}selected{% endif %}>Aluno</option>
                         </select>
-                        <button type="submit" class="btn-salvar">Salvar</button>
+                        <button type="submit">Salvar</button>
                     </form>
                 </td>
-                <td>
+                <td class="table-actions">
                     <a href="/admin/excluir/{{ usuario.id }}"
-                       onclick="return confirm('Excluir este usuário?')">
+                       class="btn-delete"
+                       onclick="return confirm('Excluir este usuario?')">
                        Excluir
                     </a>
                 </td>
@@ -42,6 +60,6 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
-
 {% endblock %}

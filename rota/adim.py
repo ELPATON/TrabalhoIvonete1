@@ -1,30 +1,53 @@
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import requests
 
-from flask import Blueprint, render_template, request, redirect
-from db import db_get, db_update, db_delete
-from decorators import login_requerido, perfil_requerido
+from flask import Blueprint, render_template, request, redirect, session
+from config import URL, KEY, HEADERS
+from db import db_get, db_update, db_delete, db_insert, db_get_filtrado
 
 admin_bp = Blueprint('admin', __name__)
 
 @admin_bp.route('/admin')
-@login_requerido
-@perfil_requerido('admin')
 def admin():
+    if session.get('perfil') != 'admin':
+        return redirect('/acesso_negado')
     usuarios = db_get('usuarios')
     return render_template('adim.html', usuarios=usuarios)
 
+@admin_bp.route('/admin/criar', methods=['POST'])
+def criar_usuario():
+    if session.get('perfil') != 'admin':
+        return redirect('/acesso_negado')
+    email = request.form['email']
+    senha = request.form['senha']
+    perfil = request.form['perfil']
+
+    r = requests.post(
+        f'{URL}/auth/v1/signup',
+        json={'email': email, 'password': senha},
+        headers={'apikey': KEY, 'Content-Type': 'application/json'}
+    )
+    dados = r.json()
+    auth_id = dados.get('id') or (dados.get('user') or {}).get('id')
+
+    if auth_id:
+        db_insert('usuarios', {
+            'email': email,
+            'perfil': perfil,
+            'auth_id': auth_id
+        })
+
+    return redirect('/admin')
+
 @admin_bp.route('/admin/excluir/<int:id>')
-@login_requerido
-@perfil_requerido('admin')
 def excluir_usuario(id):
+    if session.get('perfil') != 'admin':
+        return redirect('/acesso_negado')
     db_delete('usuarios', id)
     return redirect('/admin')
 
 @admin_bp.route('/admin/perfil/<int:id>', methods=['POST'])
-@login_requerido
-@perfil_requerido('admin')
 def alterar_perfil(id):
+    if session.get('perfil') != 'admin':
+        return redirect('/acesso_negado')
     db_update('usuarios', id, {'perfil': request.form['perfil']})
     return redirect('/admin')

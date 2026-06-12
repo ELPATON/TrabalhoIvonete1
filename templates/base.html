@@ -4,35 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduFlow</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}?v=3">
 </head>
 <body>
 
-    <nav>
-        <div class="nav-logo">EduFlow</div>
-        <div class="nav-links">
-<<<<<<< Updated upstream
-            <a href="/alunos">Alunos</a>
-            <a href="/professores">Professores</a>
-            <a href="/turmas">Turmas</a>
-            <a href="/notas">Notas</a>
+{% if session.get('usuario') %}
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">EF</div>
+            <span>EduFlow</span>
         </div>
-=======
-    <a href="/alunos">Alunos</a>
-    <a href="/professores">Professores</a>
-    <a href="/turmas">Turmas</a>
-    <a href="/notas">Notas</a>
-    {% if session.get('perfil') == 'admin' %}
-<a href="/admin">Admin</a>
+        <div class="sidebar-label">Navegação</div>
+        <nav class="sidebar-nav">
+            {% if session.get('perfil') == 'admin' %}
+                <a href="/alunos" class="{% if request.path.startswith('/alunos') %}active{% endif %}"><span class="nav-icon">&#9783;</span> Alunos</a>
+                <a href="/professores" class="{% if request.path.startswith('/professores') %}active{% endif %}"><span class="nav-icon">&#9733;</span> Professores</a>
+                <a href="/turmas" class="{% if request.path.startswith('/turmas') %}active{% endif %}"><span class="nav-icon">&#9788;</span> Turmas</a>
+                <a href="/notas" class="{% if request.path.startswith('/notas') %}active{% endif %}"><span class="nav-icon">&#9998;</span> Notas</a>
+                <a href="/admin" class="{% if request.path.startswith('/admin') %}active{% endif %}"><span class="nav-icon">&#9881;</span> Admin</a>
+            {% elif session.get('perfil') == 'professor' %}
+                <a href="/alunos" class="{% if request.path.startswith('/alunos') %}active{% endif %}"><span class="nav-icon">&#9783;</span> Alunos</a>
+                <a href="/turmas" class="{% if request.path.startswith('/turmas') %}active{% endif %}"><span class="nav-icon">&#9788;</span> Turmas</a>
+                <a href="/notas" class="{% if request.path.startswith('/notas') %}active{% endif %}"><span class="nav-icon">&#9998;</span> Notas</a>
+            {% elif session.get('perfil') == 'aluno' %}
+                <a href="/turmas" class="{% if request.path.startswith('/turmas') %}active{% endif %}"><span class="nav-icon">&#9788;</span> Minhas Turmas</a>
+                <a href="/notas" class="{% if request.path.startswith('/notas') %}active{% endif %}"><span class="nav-icon">&#9998;</span> Minhas Notas</a>
+            {% endif %}
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <span class="user-avatar">{{ session.get('usuario', '?')[0] | upper }}</span>
+                <div class="user-info">
+                    <span class="user-name">{{ session.get('usuario') }}</span>
+                    <span class="user-role">{{ session.get('perfil') }}</span>
+                </div>
+            </div>
+            <a href="/logout" class="sidebar-logout">Sair</a>
+        </div>
+    </aside>
+    <main class="main-content">
+{% else %}
+<div class="container">
 {% endif %}
-<a href="/logout">Sair</a>
-       </div>
->>>>>>> Stashed changes
-    </nav>
 
-    <div class="container">
-        {% block conteudo %}{% endblock %}
-    </div>
+{% block conteudo %}{% endblock %}
+
+{% if session.get('usuario') %}
+    </main>
+</div>
+{% else %}
+</div>
+{% endif %}
 
 </body>
 </html>

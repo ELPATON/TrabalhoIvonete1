@@ -1,17 +1,10 @@
 {% extends 'base.html' %}
 
 {% block conteudo %}
-
-<div style="max-width: 500px; margin: 3rem auto; text-align: center;">
-    <div class="form-card">
-        <h2 style="color: #e74c3c;">⚠️ Acesso Negado</h2>
-        <p style="margin-top: 1rem; color: #666;">
-            Você não tem permissão para acessar esta página.
-        </p>
-        <a href="/alunos" style="display: inline-block; margin-top: 1.5rem; background: #185FA5; color: white; padding: 0.7rem 1.5rem; border-radius: 6px; text-decoration: none;">
-            Voltar ao início
-        </a>
-    </div>
+<div class="acesso-negado">
+    <div style="font-size:3rem; margin-bottom:1rem;">🔒</div>
+    <h2>Acesso Negado</h2>
+    <p>Você não tem permissão para acessar esta página.</p>
+    <a href="/">Voltar ao início</a>
 </div>
-
 {% endblock %}
