@@ -50,7 +50,7 @@
         <tbody>
             {% for nota in notas %}
             <tr>
-                <td>{{ nota.aluno_id }}</td>
+                <td>{{ aluno_map.get(nota.aluno_id, nota.aluno_id) }}</td>
                 <td>{{ nota.disciplina }}</td>
                 <td>{{ nota.bimestre }}</td>
                 <td><strong>{{ nota.valor }}</strong></td>

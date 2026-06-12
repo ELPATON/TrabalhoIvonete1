@@ -1,20 +1,34 @@
-#funçoes d banco
 import requests
 from config import URL, HEADERS
 
 def db_get(tabela):
-    r = requests.get(f'{URL}/rest/v1/{tabela}?select=*', headers=HEADERS)
-    return r.json()
+    try:
+        r = requests.get(f'{URL}/rest/v1/{tabela}?select=*', headers=HEADERS, timeout=10)
+        return r.json() if r.ok else []
+    except Exception:
+        return []
 
 def db_insert(tabela, dados):
-    requests.post(f'{URL}/rest/v1/{tabela}', json=dados, headers=HEADERS)
+    try:
+        requests.post(f'{URL}/rest/v1/{tabela}', json=dados, headers=HEADERS, timeout=10)
+    except Exception:
+        pass
 
 def db_update(tabela, id, dados):
-    requests.patch(f'{URL}/rest/v1/{tabela}?id=eq.{id}', json=dados, headers=HEADERS)
+    try:
+        requests.patch(f'{URL}/rest/v1/{tabela}?id=eq.{id}', json=dados, headers=HEADERS, timeout=10)
+    except Exception:
+        pass
 
 def db_delete(tabela, id):
-    requests.delete(f'{URL}/rest/v1/{tabela}?id=eq.{id}', headers=HEADERS)
+    try:
+        requests.delete(f'{URL}/rest/v1/{tabela}?id=eq.{id}', headers=HEADERS, timeout=10)
+    except Exception:
+        pass
 
 def db_get_filtrado(tabela, campo, valor):
-    r = requests.get(f'{URL}/rest/v1/{tabela}?{campo}=eq.{valor}&select=*', headers=HEADERS)
-    return r.json()
+    try:
+        r = requests.get(f'{URL}/rest/v1/{tabela}?{campo}=eq.{valor}&select=*', headers=HEADERS, timeout=10)
+        return r.json() if r.ok else []
+    except Exception:
+        return []

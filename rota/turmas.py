@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from flask import Blueprint, render_template, request, redirect, session
 from db import db_get, db_insert, db_delete, db_get_filtrado
 from decorators import login_requerido, perfil_requerido

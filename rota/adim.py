@@ -1,7 +1,4 @@
-import sys
-import os
 import requests
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Blueprint, render_template, request, redirect, session
 from config import URL, KEY, HEADERS
@@ -30,7 +27,6 @@ def criar_usuario():
         headers={'apikey': KEY, 'Content-Type': 'application/json'}
     )
     dados = r.json()
-    print('CRIAR USUARIO:', dados)
     auth_id = dados.get('id') or (dados.get('user') or {}).get('id')
 
     if auth_id:

@@ -1,7 +1,4 @@
-import sys
-import os
 import requests
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Blueprint, render_template, request, redirect, session
 from config import URL, KEY
@@ -33,7 +30,6 @@ def novo_professor():
         headers={'apikey': KEY, 'Content-Type': 'application/json'}
     )
     dados = r.json()
-    print('CRIAR CONTA PROFESSOR:', dados)
     auth_id = dados.get('id') or (dados.get('user') or {}).get('id')
 
     if not auth_id:

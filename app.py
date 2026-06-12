@@ -1,11 +1,12 @@
 import os
 from flask import Flask, redirect, session
+from config import SECRET_KEY
 
 template_dir = os.path.abspath('templates')
 static_dir = os.path.abspath('static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-app.secret_key = 'eduflow2026'
+app.secret_key = SECRET_KEY
 
 from rota.auth import auth_bp
 from rota.adim import admin_bp
@@ -34,4 +35,4 @@ def index():
         return redirect('/turmas')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.getenv('FLASK_DEBUG', 'false').lower() == 'true')

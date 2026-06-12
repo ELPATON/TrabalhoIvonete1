@@ -21,7 +21,6 @@ def login():
             headers={'apikey': KEY, 'Content-Type': 'application/json'}
         )
         dados = r.json()
-        print('RESPOSTA LOGIN:', dados)
         if 'access_token' in dados:
             session['usuario'] = email
             session['token'] = dados['access_token']
@@ -43,9 +42,31 @@ def login():
             erro = 'Email ou senha incorretos!'
     return render_template('login.html', erro=erro)
 
-@auth_bp.route('/cadastro')
+@auth_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
-    return redirect('/login')
+    erro = None
+    sucesso = None
+    if request.method == 'POST':
+        email = request.form['email']
+        senha = request.form['senha']
+        perfil = request.form['perfil']
+        r = requests.post(
+            f'{URL}/auth/v1/signup',
+            json={'email': email, 'password': senha},
+            headers={'apikey': KEY, 'Content-Type': 'application/json'}
+        )
+        dados = r.json()
+        auth_id = dados.get('id') or (dados.get('user') or {}).get('id')
+        if auth_id:
+            db_insert('usuarios', {
+                'email': email,
+                'perfil': perfil,
+                'auth_id': auth_id
+            })
+            sucesso = 'Conta criada com sucesso!'
+        else:
+            erro = 'Erro ao criar conta. Verifique os dados e tente novamente.'
+    return render_template('cadastro.html', erro=erro, sucesso=sucesso)
 
 @auth_bp.route('/logout')
 def logout():
